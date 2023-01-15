@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface CourierRepository extends JpaRepository<Courier, Long> {
-    @Query(value = "SELECT * FROM couriers c WHERE c.assigned_county = :county AND c.assigned_city = :city AND c.assigned_country = :country AND c.no_orders > 0", nativeQuery = true)
-    List<Courier> findAvailableCouriers(@Param("city") String city, @Param("county") String county, @Param("country") String country);
+    @Query(value = "SELECT * FROM couriers c WHERE c.assigned_county = :county AND c.assigned_city = :city AND c.assigned_country = :country " +
+            "AND c.no_orders > 0 LIMIT 1", nativeQuery = true)
+    Optional<Courier> findAvailableCouriers(@Param("city") String city, @Param("county") String county, @Param("country") String country);
 }

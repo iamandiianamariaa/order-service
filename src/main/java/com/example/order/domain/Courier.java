@@ -1,6 +1,5 @@
 package com.example.order.domain;
 
-import com.example.order.domain.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +23,7 @@ public class Courier {
     private String phone;
 
     @Column(name = "no_orders")
-    private Integer noOrders;
+    private Integer noOrdersLeft;
 
     @Column(name = "assigned_city")
     private String assignedCity;

@@ -3,9 +3,11 @@ package com.example.order.domain;
 import com.example.order.domain.enums.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Builder
@@ -54,8 +56,9 @@ public class Order {
 
     private Double cost;
     @Column(name = "pickup_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime pickupDate;
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-mm-dd")
+    private Date pickupDate;
 
     @ManyToOne
     @JoinColumn(name = "fk_courier_id")

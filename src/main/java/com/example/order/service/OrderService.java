@@ -26,7 +26,8 @@ public class OrderService {
         Order order = orderMapper.maptoEntity(orderRequestDto);
         order.setStatus(Status.PLACED);
         order.setCost(10.5);
-        List<Courier> courier = courierRepository.findAvailableCouriers(order.getSenderCity(), order.getSenderCounty(), order.getSenderCountry());
+        Optional<Courier> courier = courierRepository.findAvailableCouriers(order.getSenderCity(), order.getSenderCounty(), order.getSenderCountry());
+        order.setCourier(courier.get());
 
         return orderRepository.save(order);
     }
