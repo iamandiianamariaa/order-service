@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -32,6 +33,17 @@ public class GlobalExceptionAdvice {
         return new ResponseEntity<>(
                 ErrorResponse.builder()
                         .message(String.format("%s with ID %s doesn't exist!", e.getEntityType(), e.getEntityId()))
+                        .code(404)
+                        .build(),
+                HttpStatus.NOT_FOUND
+        );
+    }
+
+    @ExceptionHandler({NoSuchElementException.class})
+    public ResponseEntity<ErrorResponse> handle(NoSuchElementException e) {
+        return new ResponseEntity<>(
+                ErrorResponse.builder()
+                        .message(e.getMessage())
                         .code(404)
                         .build(),
                 HttpStatus.NOT_FOUND

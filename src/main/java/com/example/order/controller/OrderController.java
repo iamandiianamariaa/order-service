@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,8 +24,9 @@ public class OrderController {
     private final OrderMapper orderMapper;
 
     @PostMapping
-    public OrderDto createOrder(@RequestBody @Valid OrderRequestDto dto){
-        return orderMapper.mapToDto(orderService.create(dto));
+    public Optional<OrderDto> createOrder(@RequestBody @Valid OrderRequestDto dto){
+        Optional<Order> createdOrder = orderService.create(dto);
+        return createdOrder.map(orderMapper::mapToDto);
     }
 
     @GetMapping

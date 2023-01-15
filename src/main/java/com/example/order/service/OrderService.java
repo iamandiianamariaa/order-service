@@ -22,14 +22,16 @@ public class OrderService {
     private final CourierRepository courierRepository;
     private final OrderMapper orderMapper;
 
-    public Order create(OrderRequestDto orderRequestDto) {
+    public Optional<Order> create(OrderRequestDto orderRequestDto) {
         Order order = orderMapper.maptoEntity(orderRequestDto);
         order.setStatus(Status.PLACED);
         order.setCost(10.5);
         Optional<Courier> courier = courierRepository.findAvailableCouriers(order.getSenderCity(), order.getSenderCounty(), order.getSenderCountry());
-        order.setCourier(courier.get());
+        if(courier.isEmpty())
+            return Optional.empty();
 
-        return orderRepository.save(order);
+        order.setCourier(courier.get());
+        return Optional.of(orderRepository.save(order));
     }
 
     public Order getById(Long orderId) {
