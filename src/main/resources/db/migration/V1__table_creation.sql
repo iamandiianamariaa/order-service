@@ -30,6 +30,7 @@ CREATE TABLE orders
     parcel_number INT NOT NULL,
     cost DECIMAL(6,2),
     pickup_date date,
+    username VARCHAR(100),
     fk_courier_id BIGINT NOT NULL,
 
     PRIMARY KEY (id),

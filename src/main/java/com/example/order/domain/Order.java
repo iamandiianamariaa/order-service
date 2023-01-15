@@ -53,6 +53,7 @@ public class Order {
     private String receiverAddress;
     @Column(name = "parcel_number")
     private Integer parcelNumber;
+    private String username;
 
     private Double cost;
     @Column(name = "pickup_date")

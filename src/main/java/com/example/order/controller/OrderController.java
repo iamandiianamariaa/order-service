@@ -30,8 +30,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<OrderDto> getAll(){
-        return orderService.getAll().stream()
+    public List<OrderDto> getAll(@RequestParam String username){
+        return orderService.getAll(username).stream()
                 .map(orderMapper::mapToDto)
                 .collect(Collectors.toList());
     }

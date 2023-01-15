@@ -33,4 +33,6 @@ public class OrderRequestDto {
     private String receiverCounty;
     private String receiverCountry;
     private String receiverAddress;
+
+    private String username;
 }

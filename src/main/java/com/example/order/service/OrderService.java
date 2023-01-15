@@ -62,7 +62,7 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public List<Order> getAll() {
-        return orderRepository.findAll();
+    public List<Order> getAll(String username) {
+        return orderRepository.findOrdersByUsername(username);
     }
 }
