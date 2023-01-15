@@ -23,6 +23,9 @@ public class Courier {
     private String name;
     private String phone;
 
+    @Column(name = "no_orders")
+    private Integer noOrders;
+
     @Column(name = "assigned_city")
     private String assignedCity;
     @Column(name = "assigned_county")

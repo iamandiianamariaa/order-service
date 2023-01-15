@@ -1,3 +1,16 @@
+CREATE TABLE couriers
+(
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    phone VARCHAR(50) NOT NULL,
+    no_orders INT,
+    assigned_city VARCHAR(50) NOT NULL,
+    assigned_county VARCHAR(50) NOT NULL,
+    assigned_country VARCHAR(50) NOT NULL,
+
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE orders
 (
     id BIGINT NOT NULL AUTO_INCREMENT,
@@ -17,6 +30,8 @@ CREATE TABLE orders
     parcel_number INT NOT NULL,
     cost DECIMAL(6,2),
     pickup_date datetime,
+    fk_courier_id BIGINT NOT NULL,
 
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    FOREIGN KEY (fk_courier_id) REFERENCES couriers(id)
 );

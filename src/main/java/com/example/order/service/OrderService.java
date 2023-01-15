@@ -1,26 +1,32 @@
 package com.example.order.service;
 
+import com.example.order.domain.Courier;
 import com.example.order.domain.Order;
 import com.example.order.domain.enums.Status;
 import com.example.order.dto.request.OrderRequestDto;
 import com.example.order.exception.EntityNotFoundException;
 import com.example.order.mapper.OrderMapper;
+import com.example.order.repository.CourierRepository;
 import com.example.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
+
+    private final CourierRepository courierRepository;
     private final OrderMapper orderMapper;
 
     public Order create(OrderRequestDto orderRequestDto) {
         Order order = orderMapper.maptoEntity(orderRequestDto);
         order.setStatus(Status.PLACED);
         order.setCost(10.5);
+        List<Courier> courier = courierRepository.findAvailableCouriers(order.getSenderCity(), order.getSenderCounty(), order.getSenderCountry());
 
         return orderRepository.save(order);
     }

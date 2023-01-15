@@ -58,7 +58,7 @@ public class Order {
     private LocalDateTime pickupDate;
 
     @ManyToOne
-    @JoinColumn(name = "FK_COURIER_ID")
+    @JoinColumn(name = "fk_courier_id")
     private Courier courier;
 
 //    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
