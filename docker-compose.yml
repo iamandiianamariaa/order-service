@@ -1,21 +1,26 @@
 version: "3"
 services:
   order:
-    image: sergiuvictor/courier_service:v1.0
+    build: ./order-service
     ports:
       - '8083:8080'
     depends_on:
       - mysqldb
     environment:
       spring.datasource.url: jdbc:mysql://mysqldb:3306/courier_orders
+      spring.datasource.username: root
+      spring.datasource.password: root
+
   user:
-    image: sergiuvictor/user_service:v1.0
+    build: ./user-service
     ports:
       - '8084:8080'
     depends_on:
       - mysqldb2
     environment:
       spring.datasource.url: jdbc:mysql://mysqldb2:3306/users_schema
+      spring.datasource.username: root
+      spring.datasource.password: root
 
   mysqldb2:
     image: mysql:8
