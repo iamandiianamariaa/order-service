@@ -45,7 +45,7 @@ services:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=courier_orders
     healthcheck:
-      test: ["CMD-SHELL", 'mssysqladmin ping']
+      test: ["CMD-SHELL", 'mysqladmin ping']
       interval: 10s
       timeout: 2s
       retries: 10
