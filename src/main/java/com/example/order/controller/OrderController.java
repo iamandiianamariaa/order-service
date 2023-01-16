@@ -42,12 +42,10 @@ public class OrderController {
     }
 
     @PutMapping("/{orderId}")
-    public ResponseEntity<OrderDto> updateOrder(@PathVariable Long orderId,
+    public OrderDto updateOrder(@PathVariable Long orderId,
                                                 @RequestBody @Valid OrderRequestDto orderRequestDto) {
         Order savedOrder = orderService.update(orderId, orderRequestDto);
-        return ResponseEntity
-                .ok()
-                .body(orderMapper.mapToDto(savedOrder));
+        return orderMapper.mapToDto(savedOrder);
     }
 
     @PutMapping("/orderStatus/{orderId}")
@@ -60,12 +58,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/{orderId}")
-    public ResponseEntity<?> deleteById(@PathVariable Long orderId) {
-
+    public void deleteById(@PathVariable Long orderId) {
         orderService.deleteById(orderId);
-
-        return ResponseEntity
-                .noContent()
-                .build();
     }
 }
