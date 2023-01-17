@@ -17,6 +17,5 @@ public interface OrderMapper {
     Order maptoEntity(OrderRequestDto orderRequestDto);
 
     @Mapping(ignore = true, target = "id")
-    @Mapping(ignore = true, target = "pickupDate")
     Order update(OrderRequestDto orderRequestDto, @MappingTarget Order order);
 }

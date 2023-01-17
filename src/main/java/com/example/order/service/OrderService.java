@@ -1,5 +1,6 @@
 package com.example.order.service;
 
+import com.example.order.controller.OrderController;
 import com.example.order.domain.Courier;
 import com.example.order.domain.Order;
 import com.example.order.domain.enums.Status;
@@ -10,9 +11,12 @@ import com.example.order.repository.CourierRepository;
 import com.example.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +26,9 @@ public class OrderService {
     private final CourierRepository courierRepository;
     private final OrderMapper orderMapper;
 
+    static Logger logger = Logger.getLogger(OrderService.class.getName());
+
+    @Transactional
     public Optional<Order> create(OrderRequestDto orderRequestDto) {
         Order order = orderMapper.maptoEntity(orderRequestDto);
         order.setStatus(Status.PLACED);
@@ -31,6 +38,7 @@ public class OrderService {
             return Optional.empty();
 
         order.setCourier(courier.get());
+        courierRepository.setNoOrders(courier.get().getId());
         return Optional.of(orderRepository.save(order));
     }
 
@@ -42,17 +50,44 @@ public class OrderService {
                         .build()
                 );
     }
-
+    @Transactional
     public void deleteById(Long id) {
-        getById(id);
+        Order order = getById(id);
+        courierRepository.setNoOrdersPlus1(order.getCourier().getId());
         orderRepository.deleteById(id);
     }
 
-    public Order update(Long orderId, OrderRequestDto orderRequestDto) {
+    @Transactional
+    public Optional<Order> update(Long orderId, OrderRequestDto orderRequestDto) {
         Order order = getById(orderId);
+        logger.info("a facut get by id");
+        String orderRequestSenderCity = orderRequestDto.getSenderCity();
+        String orderRequestSenderCounty = orderRequestDto.getSenderCounty();
+        String orderRequestSenderCountry = orderRequestDto.getSenderCountry();
+        String orderSenderCity = order.getSenderCity();
+        String orderSenderCounty = order.getSenderCounty();
+        String orderSenderCountry = order.getSenderCountry();
         Order updatedOrder = orderMapper.update(orderRequestDto, order);
+        logger.info("a fost mapat");
+        Optional<Courier> oldCourier = courierRepository.findAvailableCouriers(orderSenderCity, orderSenderCounty, orderSenderCountry);
+        Optional<Courier> newCourier = courierRepository.findAvailableCouriers(orderRequestSenderCity, orderRequestSenderCounty, orderRequestSenderCountry);
+        logger.info("s-a verificat daca  e curier");
+        logger.info("request" + orderRequestSenderCity);
+        logger.info("vechi" + orderSenderCity);
+        if(!Objects.equals(orderRequestSenderCity, orderSenderCity) ||
+                !Objects.equals(orderRequestSenderCounty, orderSenderCounty)
+                || !Objects.equals(orderRequestSenderCountry, orderSenderCountry)) {
+            logger.info("dadada");
+            if (newCourier.isEmpty())
+                return Optional.empty();
+            logger.info("dupa return");
+            courierRepository.setNoOrdersPlus1(oldCourier.get().getId());
+            courierRepository.setNoOrders(newCourier.get().getId());
+        }
 
-        return orderRepository.save(updatedOrder);
+        logger.info("s-a gasit curier");
+        logger.info("final");
+        return Optional.of(orderRepository.save(updatedOrder));
     }
 
     public Order updateOrderStatus(Long orderId, String status) {
