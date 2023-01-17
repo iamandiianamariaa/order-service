@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: couriers-pv
+  labels:
+    type: local
+spec:
+  storageClassName: couriers-db
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/tmp/db2"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: couriers-pvc
+spec:
+  storageClassName: couriers-db
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: couriers-mysql
+spec:
+  selector:
+    matchLabels:
+      app: couriers-mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: couriers-mysql
+    spec:
+      containers:
+        - image: mysql:8.0
+          name: mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: couriers-secret
+                  key: couriers_db_password
+                  
+            - containerPort: 3306
+              name: couriers-port
+
+          volumeMounts:
+            - name: couriers-db-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: couriers-db-storage
+          persistentVolumeClaim:
+            claimName: couriers-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: couriers-db-service
+spec:
+  ports:
+    - port: 3308
+      targetPort: 3306
+  selector:
+    app: couriers-mysql
+  clusterIP: None

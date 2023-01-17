@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-deployment
+  labels:
+    app: users
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users
+  template:
+    metadata:
+      labels:
+        app: users
+    spec:
+      containers:
+      - name: users
+        image: sergiuvictor/user_service:v1.2
+        ports:
+        - containerPort: 8083
+        env:
+        - name: spring.datasource.username
+          valueFrom:
+            secretKeyRef:
+              name: users-secret
+              key: users_db_user 
+        - name: spring.datasource.password
+          valueFrom:
+            secretKeyRef:
+              name: users-secret
+              key: users_db_password
+
+        - name: spring.datasource.url
+          valueFrom:
+            configMapKeyRef:
+              name: configmap
+              key: users_db_url
+              
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  type: NodePort
+  selector:
+    app: users
+  ports:
+    - protocol: TCP
+      port: 8083
+      targetPort: 8083
+      nodePort: 30200

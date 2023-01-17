@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: couriers-deployment
+  labels:
+    app: couriers
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: couriers
+  template:
+    metadata:
+      labels:
+        app: couriers
+    spec:
+      containers:
+      - name: couriers
+        image: sergiuvictor/courier_service:v1.2
+        ports:
+        - containerPort: 8084
+        env:
+        - name: spring.datasource.username
+          valueFrom:
+            secretKeyRef:
+              name: couriers-secret
+              key: couriers_db_user 
+        - name: spring.datasource.password
+          valueFrom:
+            secretKeyRef:
+              name: couriers-secret
+              key: couriers_db_password
+
+        - name: spring.datasource.url
+          valueFrom:
+            configMapKeyRef:
+              name: configmap
+              key: couriers_db_url
+              
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: courier-service
+spec:
+  selector:
+    app: courier
+  ports:
+    - protocol: TCP
+      port: 8084
+      targetPort: 8084
