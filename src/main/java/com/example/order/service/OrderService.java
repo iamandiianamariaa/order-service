@@ -58,18 +58,15 @@ public class OrderService {
     }
 
     @Transactional
-    public Optional<Order> update(Long orderId, OrderRequestDto orderRequestDto) {
-        Order order = getById(orderId);
-        logger.info("a facut get by id");
+    public void updateOrderWhenCityIsChanged(OrderRequestDto orderRequestDto, Order order){
         String orderRequestSenderCity = orderRequestDto.getSenderCity();
         String orderRequestSenderCounty = orderRequestDto.getSenderCounty();
         String orderRequestSenderCountry = orderRequestDto.getSenderCountry();
         String orderSenderCity = order.getSenderCity();
         String orderSenderCounty = order.getSenderCounty();
         String orderSenderCountry = order.getSenderCountry();
-        Order updatedOrder = orderMapper.update(orderRequestDto, order);
         logger.info("a fost mapat");
-        Optional<Courier> oldCourier = courierRepository.findAvailableCouriers(orderSenderCity, orderSenderCounty, orderSenderCountry);
+        Courier oldCourier = order.getCourier();
         Optional<Courier> newCourier = courierRepository.findAvailableCouriers(orderRequestSenderCity, orderRequestSenderCounty, orderRequestSenderCountry);
         logger.info("s-a verificat daca  e curier");
         logger.info("request" + orderRequestSenderCity);
@@ -77,16 +74,25 @@ public class OrderService {
         if(!Objects.equals(orderRequestSenderCity, orderSenderCity) ||
                 !Objects.equals(orderRequestSenderCounty, orderSenderCounty)
                 || !Objects.equals(orderRequestSenderCountry, orderSenderCountry)) {
-            logger.info("dadada");
-            if (newCourier.isEmpty())
-                return Optional.empty();
-            logger.info("dupa return");
-            courierRepository.setNoOrdersPlus1(oldCourier.get().getId());
-            courierRepository.setNoOrders(newCourier.get().getId());
+            if(newCourier.isPresent()){
+                logger.info("dadada");
+                logger.info("dupa return");
+                courierRepository.setNoOrdersPlus1(oldCourier.getId());
+                courierRepository.setNoOrders(newCourier.get().getId());
+                logger.info("si celalalt" + newCourier.get().getId());
+            }
         }
+    }
 
+    public Optional<Order> update(Long orderId, OrderRequestDto orderRequestDto) {
+        Order order = getById(orderId);
+        logger.info("a facut get by id");
+        Order updatedOrder = orderMapper.update(orderRequestDto, order);
+        Optional<Courier> newCourier = courierRepository.findAvailableCouriers(orderRequestDto.getSenderCity(), orderRequestDto.getSenderCounty(), orderRequestDto.getSenderCountry());
+        updateOrderWhenCityIsChanged(orderRequestDto, order);
         logger.info("s-a gasit curier");
         logger.info("final");
+        if (newCourier.isEmpty()) return Optional.empty();
         return Optional.of(orderRepository.save(updatedOrder));
     }
 

@@ -51,6 +51,8 @@ public class OrderController {
         Optional<Order> savedOrder = orderService.update(orderId, orderRequestDto);
         //logger.info(savedOrder.get().getSenderName());
         logger.info("finally");
+        if(savedOrder.isPresent())
+            logger.info(savedOrder.get().getSenderCity());
         return savedOrder.map(orderMapper::mapToDto);
     }
 
