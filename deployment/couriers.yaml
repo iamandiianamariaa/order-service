@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: couriers
-        image: sergiuvictor/courier_service:v1.3
+        image: sergiuvictor/courier-service:v1.3
         ports:
         - containerPort: 8084
         env:
