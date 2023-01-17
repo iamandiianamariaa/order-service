@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: users
-        image: sergiuvictor/user_service:v1.2
+        image: sergiuvictor/user_service:v1.3
         ports:
         - containerPort: 8083
         env:
