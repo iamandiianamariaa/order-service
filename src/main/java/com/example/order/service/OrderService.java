@@ -27,7 +27,7 @@ public class OrderService {
         order.setStatus(Status.PLACED);
         order.setCost(10.5);
         Optional<Courier> courier = courierRepository.findAvailableCouriers(order.getSenderCity(), order.getSenderCounty(), order.getSenderCountry());
-        if(courier.isEmpty())
+        if (courier.isEmpty())
             return Optional.empty();
 
         order.setCourier(courier.get());

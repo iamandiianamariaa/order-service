@@ -24,26 +24,26 @@ public class OrderController {
     private final OrderMapper orderMapper;
 
     @PostMapping
-    public Optional<OrderDto> createOrder(@RequestBody @Valid OrderRequestDto dto){
+    public Optional<OrderDto> createOrder(@RequestBody @Valid OrderRequestDto dto) {
         Optional<Order> createdOrder = orderService.create(dto);
         return createdOrder.map(orderMapper::mapToDto);
     }
 
     @GetMapping
-    public List<OrderDto> getAll(@RequestParam String username){
+    public List<OrderDto> getAll(@RequestParam String username) {
         return orderService.getAll(username).stream()
                 .map(orderMapper::mapToDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{orderId}")
-    public OrderDto getById(@PathVariable Long orderId){
+    public OrderDto getById(@PathVariable Long orderId) {
         return orderMapper.mapToDto(orderService.getById(orderId));
     }
 
     @PutMapping("/{orderId}")
     public OrderDto updateOrder(@PathVariable Long orderId,
-                                                @RequestBody @Valid OrderRequestDto orderRequestDto) {
+                                @RequestBody @Valid OrderRequestDto orderRequestDto) {
         Order savedOrder = orderService.update(orderId, orderRequestDto);
         return orderMapper.mapToDto(savedOrder);
     }

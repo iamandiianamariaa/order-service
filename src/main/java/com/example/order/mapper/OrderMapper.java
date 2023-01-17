@@ -10,6 +10,7 @@ import org.mapstruct.*;
         unmappedTargetPolicy = ReportingPolicy.WARN)
 public interface OrderMapper {
     OrderDto mapToDto(Order order);
+
     //@Mapping(source = "orderDetailsId", target = "orderDetails", qualifiedByName = "idToOrderDetails")
     Order mapToEntity(OrderDto orderDto);
 

@@ -4,7 +4,6 @@ import com.example.order.domain.enums.Status;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
