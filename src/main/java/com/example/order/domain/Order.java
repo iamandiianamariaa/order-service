@@ -53,7 +53,6 @@ public class Order {
     private Integer parcelNumber;
     private String username;
 
-    private Double cost;
     @Column(name = "pickup_date")
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private Date pickupDate;
@@ -61,8 +60,4 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "fk_courier_id")
     private Courier courier;
-
-//    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "fk_order_details", referencedColumnName = "id")
-//    private OrderDetails orderDetails;
 }

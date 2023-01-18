@@ -6,14 +6,12 @@ import com.example.order.dto.response.OrderDto;
 import com.example.order.mapper.OrderMapper;
 import com.example.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,8 +21,6 @@ import java.util.stream.Collectors;
 public class OrderController {
     private final OrderService orderService;
     private final OrderMapper orderMapper;
-
-    static Logger logger = Logger.getLogger(OrderController.class.getName());
 
     @PostMapping
     public Optional<OrderDto> createOrder(@RequestBody @Valid OrderRequestDto dto) {
@@ -46,23 +42,9 @@ public class OrderController {
 
     @PutMapping("/{orderId}")
     public Optional<OrderDto> updateOrder(@PathVariable Long orderId,
-                                @RequestBody @Valid OrderRequestDto orderRequestDto) {
-        logger.info("a intrat");
+                                          @RequestBody @Valid OrderRequestDto orderRequestDto) {
         Optional<Order> savedOrder = orderService.update(orderId, orderRequestDto);
-        //logger.info(savedOrder.get().getSenderName());
-        logger.info("finally");
-        if(savedOrder.isPresent())
-            logger.info(savedOrder.get().getSenderCity());
         return savedOrder.map(orderMapper::mapToDto);
-    }
-
-    @PutMapping("/orderStatus/{orderId}")
-    public ResponseEntity<OrderDto> updateOrderStatus(@PathVariable Long orderId,
-                                                      @RequestParam(value = "status") String status) {
-        Order savedOrder = orderService.updateOrderStatus(orderId, status);
-        return ResponseEntity
-                .ok()
-                .body(orderMapper.mapToDto(savedOrder));
     }
 
     @DeleteMapping("/{orderId}")

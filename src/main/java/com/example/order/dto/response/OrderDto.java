@@ -16,7 +16,6 @@ public class OrderDto {
     private String receiverName;
     private String receiverPhone;
     private Integer parcelNumber;
-    private Double cost;
     private Date pickupDate;
     private String senderCity;
     private String senderCounty;
