@@ -16,9 +16,9 @@ spec:
     spec:
       containers:
       - name: couriers
-        image: sergiuvictor/courier-service:v1.3
+        image: sergiuvictor/courier-service:v1.4
         ports:
-        - containerPort: 8084
+        - containerPort: 8080
         env:
         - name: spring.datasource.username
           valueFrom:
@@ -48,4 +48,4 @@ spec:
   ports:
     - protocol: TCP
       port: 8084
-      targetPort: 8084
+      targetPort: 8080
